@@ -24,11 +24,10 @@ def event():
         if event.type == pygame.KEYDOWN and event.key == pygame.K_DELETE:
             model.ball_del()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            model.go = False
+            model.stop = not model.stop
         if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-            model.go = True
+            model.go = not model.go
         if event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-            model.go = False
-            model.ball_to_wall()
+            model.wall=not model.wall
         if event.type==event_type:
             model.ball_create()

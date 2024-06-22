@@ -5,12 +5,12 @@ import pygame
 
 ball_in_sec=0
 balls=[]
-speedx=2
-speedy=2
+speedx=19
+speedy=19
 show_text=True
 go=True
-
-
+wall=False
+stop=False
 
 def ball_create():
     color = [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
@@ -31,32 +31,46 @@ def ball_change():
     if ball_in_sec<0:
         ball_in_sec=0
 
+def move_to_wall(cord,speed,side,object):
+    object['cord'][cord] += speed
+    if side=='left':
+        if object['cord'][cord] <= 0 + object['size']:
+            object['cord'][cord] = 0 + object['size']
+    if side == 'right':
+        if object['cord'][cord] >= 1000 - object['size']:
+            object['cord'][cord] = 1000 - object['size']
+
+
 def ball_to_wall():
     for ball in balls:
         if ball['cord'][0]>=500 and ball['cord'][1]>=500:
             if 1000-ball['cord'][0]>1000-ball['cord'][1]:
-                ball['cord'][1] = 1000 - ball['size']
+                move_to_wall(1,speedy,'right',ball)
             else:
-                ball['cord'][0] = 1000 - ball['size']
+                move_to_wall(0,speedx,'right',ball)
         if ball['cord'][0]<=500 and ball['cord'][1]<=500:
             if 0+ball['cord'][0]>0+ball['cord'][1]:
-                ball['cord'][1] = 0 + ball['size']
+                move_to_wall(1,-speedy,'left',ball)
             else:
-                ball['cord'][0] = 0 + ball['size']
+                move_to_wall(0,-speedx,'left',ball)
         if ball['cord'][0]<=500 and ball['cord'][1]>=500:
             if 0+ball['cord'][0]>1000-ball['cord'][1]:
-                ball['cord'][1] = 1000 - ball['size']
+                move_to_wall(1,speedy,'right',ball)
             else:
-                ball['cord'][0] = 0 + ball['size']
+                move_to_wall(0,-speedx,'left',ball)
         if ball['cord'][0]>=500 and ball['cord'][1]<=500:
             if 1000-ball['cord'][0]>0+ball['cord'][1]:
-                ball['cord'][1] = 0 + ball['size']
+                move_to_wall(1,-speedy,'left',ball)
             else:
-                ball['cord'][0] = 1000 - ball['size']
-        print(ball['cord'])
+                move_to_wall(0,speedx,'right',ball)
+
 
 def model():
     global speedy,speedx,ball_in_sec
+    if stop:
+        return
+    if wall:
+        ball_to_wall()
     if not go:
         return
     for ball in balls:
